@@ -9,8 +9,6 @@
   var REFRESH_MS = 3 * 60 * 1000;
   var COLS = 5;
   var KEY = { left: 37, up: 38, right: 39, down: 40, ok: 13, back: 10009 };
-  // Apps we can hand a video to, tried in this order.
-  var YOUTUBE_APPS = ['111299001912', '9Ur5IzDKqV.TizenYouTube', 'xvvl3S1TT1.TizenTubeStandalone'];
   var STREMIO_APPS = ['SLiteTizen.StremioLite'];
   // Inside TizenBrew the page has no `tizen` object: the module's service (service.js) opens apps.
   var SERVICE = 'http://127.0.0.1:8091';
@@ -30,7 +28,7 @@
     var t = $('toast');
     t.textContent = msg; t.className = 'toast show';
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { t.className = 'toast'; }, 5000);
+    toastTimer = setTimeout(function () { t.className = "toast"; }, 12000);
   }
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]; });
@@ -107,43 +105,33 @@
     x.send(JSON.stringify(body));
   }
 
-  function launchOne(ids, control, k, onFail) {
-    if (k >= ids.length) { onFail(); return; }
-    try {
-      window.tizen.application.launchAppControl(control, ids[k], function () {}, function () { launchOne(ids, control, k + 1, onFail); });
-    } catch (e) { launchOne(ids, control, k + 1, onFail); }
-  }
 
-  // DIAL, the protocol phones use to "cast to TV": the TV's own YouTube app opens that exact video.
-  // Answers 201 when it took it. The first time, the TV may ask to allow the connection.
-  function dial(videoId, onOk, onFail) {
-    var x = new XMLHttpRequest();
-    x.open('POST', 'http://127.0.0.1:8080/ws/apps/YouTube', true);
-    x.setRequestHeader('Content-Type', 'text/plain; charset=utf-8');
-    x.timeout = 40000;
-    x.onload = function () { if (x.status === 201 || x.status === 200) onOk(); else onFail(); };
-    x.onerror = x.ontimeout = onFail;
-    x.send('v=' + videoId);
-  }
 
-  function openVideo(name, videoId) {
-    toast('Abriendo ' + name + '…');
-    dial(videoId, function () {}, function () { openVideoApp(name, videoId); });
-  }
-
-  function openVideoApp(name, videoId) {
-    var url = 'https://www.youtube.com/watch?v=' + videoId;
-    var fail = function () { toast('No pude abrir YouTube. Abre la app de YouTube y busca ' + name + '.'); };
-    if (window.tizen && window.tizen.application) {
-      var payload = [new window.tizen.ApplicationControlData('PAYLOAD', ['#play=' + videoId])];
-      var ctl = new window.tizen.ApplicationControl('http://tizen.org/appcontrol/operation/view', url, null, null, payload);
-      launchOne(YOUTUBE_APPS, ctl, 0, fail);
-    } else if (/^http:\/\/127\.0\.0\.1:8081\//.test(window.location.href)) {
-      askService('/youtube', { videoId: videoId }, fail);
-    } else {
-      window.location.href = url;
+  // TizenTube (ad-free YouTube) reads its app control data as JSON {"args": "..."} and appends
+  // those args to youtube.com/tv, so "v=<id>" opens that exact video (see its standalone/index.html).
+  var TIZENTUBE = 'xvvl3S1TT1.TizenTubeStandalone';
+  function openInTizenTube(videoId, onFail) {
+    if (!window.tizen || !window.tizen.application) {
+      // As a TizenBrew module the page has no `tizen`: its service (service.js) launches TizenTube.
+      if (/^http:\/\/127\.0\.0\.1:8081\//.test(window.location.href)) askService('/tizentube', { videoId: videoId }, onFail);
+      else onFail();
+      return;
     }
+    try {
+      var data = [new window.tizen.ApplicationControlData('PAYLOAD', [JSON.stringify({ args: 'v=' + videoId })])];
+      var ctl = new window.tizen.ApplicationControl('http://tizen.org/appcontrol/operation/default', null, null, null, data);
+      window.tizen.application.launchAppControl(ctl, TIZENTUBE, function () {}, onFail);
+    } catch (e) { onFail(); }
   }
+
+  // Only TizenTube: no official YouTube app in between (Roberto's call), so it is always ad-free.
+  function openVideo(name, videoId) {
+    toast('Abriendo ' + name + ' en TizenTube…');
+    openInTizenTube(videoId, function () {
+      toast('No se pudo abrir TizenTube. Revisa que esté instalado y vuelve a intentar.');
+    });
+  }
+
 
   function openStremio() {
     var fail = function () { toast('Abre Stremio desde el menú de apps.'); };
