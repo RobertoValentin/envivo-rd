@@ -1,0 +1,54 @@
+@font-face { font-family: 'Atkinson'; font-weight: 400; src: url(fonts/atkinson-400.ttf) format('truetype'); }
+@font-face { font-family: 'Atkinson'; font-weight: 700; src: url(fonts/atkinson-700.ttf) format('truetype'); }
+
+/* Palette: night #0D1C30, card #172C45, flag red #D7262E, text #F4F7FB, muted #A9B8CC, focus #FFE9B8 */
+html, body { margin: 0; padding: 0; width: 1920px; height: 1080px; overflow: hidden; background: #0D1C30; }
+body { font-family: 'Atkinson', 'Samsung Sans', Arial, sans-serif; color: #F4F7FB; }
+#stage { position: relative; width: 1920px; height: 1080px; padding: 56px 96px 0; box-sizing: border-box; }
+
+.top { height: 72px; }
+.brand { margin: 0; float: left; font-size: 40px; font-weight: 700; line-height: 72px; letter-spacing: 0.5px; }
+.clock { margin: 0; float: right; font-size: 40px; line-height: 72px; color: #A9B8CC; }
+.checked { margin: 0 40px 0 0; float: right; font-size: 28px; line-height: 72px; color: #A9B8CC; }
+
+.hero { position: relative; height: 520px; margin-top: 32px; border-radius: 28px; outline: 0; }
+.hero-pic { position: absolute; left: 0; top: 0; width: 924px; height: 520px; border-radius: 28px; overflow: hidden; background: #172C45; }
+.hero-pic img { width: 100%; height: 100%; display: block; }
+.live-pill { position: absolute; left: 28px; top: 28px; padding: 10px 22px 10px 46px; border-radius: 40px;
+  background: #D7262E; font-size: 34px; font-weight: 700; }
+.live-pill:before { content: ''; position: absolute; left: 20px; top: 50%; width: 16px; height: 16px; margin-top: -8px;
+  border-radius: 50%; background: #FFFFFF; }
+.hero-text { position: absolute; left: 984px; top: 24px; right: 0; }
+.hero-channel { margin: 0 0 16px; font-size: 44px; font-weight: 700; color: #FFE9B8; }
+.hero-title { margin: 0; font-size: 56px; line-height: 1.18; font-weight: 700; max-height: 330px; overflow: hidden; }
+.hero-hint { margin: 32px 0 0; font-size: 36px; color: #A9B8CC; }
+.hero.off .hero-pic { background: #172C45; }
+.hero.off .hero-pic img { width: 280px; height: 280px; margin: 120px auto 0; border-radius: 50%; object-fit: cover; }
+.hero.off .live-pill { display: none; }
+.hero.focus .hero-pic { box-shadow: 0 0 0 8px #FFE9B8; }
+
+.shelf { margin-top: 36px; }
+.shelf-title { margin: 0 0 20px; font-size: 38px; font-weight: 700; color: #A9B8CC; }
+.row-window { position: relative; height: 370px; margin: 0 -96px; padding: 0 96px; overflow: hidden; }
+.row { position: absolute; left: 96px; top: 12px; white-space: nowrap; transition: transform 0.25s ease-out; }
+.tile { display: inline-block; vertical-align: top; width: 412px; height: 330px; margin-right: 28px; border-radius: 22px;
+  background: #172C45; white-space: normal; overflow: hidden; transition: transform 0.15s ease-out; }
+.tile .pic { position: relative; width: 412px; height: 232px; background: #0D1C30; }
+.tile .pic img { display: block; width: 412px; height: 232px; object-fit: cover; }
+.mini-live { position: absolute; left: 14px; top: 14px; padding: 6px 14px; border-radius: 24px; background: #D7262E; font-size: 24px; font-weight: 700; }
+.tile .name { margin: 12px 18px 0; font-size: 30px; font-weight: 700; line-height: 40px; height: 40px; overflow: hidden; white-space: nowrap; }
+.tile .avatar { width: 40px; height: 40px; border-radius: 50%; vertical-align: top; margin-right: 12px; }
+.tile .state { margin: 2px 18px 0; font-size: 25px; color: #A9B8CC; line-height: 32px; height: 32px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.tile.is-live .state { color: #F4F7FB; }
+.tile.focus { transform: scale(1.06); box-shadow: 0 0 0 7px #FFE9B8; }
+.tile.more { background: #1F3A5C; text-align: center; }
+.tile.more .glyph { display: block; width: 150px; height: 150px; margin: 40px auto 18px; border-radius: 50%;
+  background: #0D1C30; font-size: 70px; line-height: 150px; font-weight: 700; color: #FFE9B8; }
+.tile.more .name, .tile.more .state { text-align: center; }
+.hero.recorded .live-pill { display: none; }
+
+.toast { position: absolute; left: 50%; bottom: 40px; width: 1200px; margin: 0 0 0 -600px; padding: 22px 32px; box-sizing: border-box;
+  border-radius: 20px; background: #F4F7FB; color: #0D1C30; font-size: 34px; text-align: center; opacity: 0; transition: opacity 0.2s; }
+.toast.show { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) { .row, .tile, .toast { transition: none; } }
