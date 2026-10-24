@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>En vivo RD</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="stage">
+  <header class="top">
+    <h1 class="brand">En vivo RD</h1>
+    <p class="clock" id="clock"></p>
+    <p class="checked" id="checked"></p>
+  </header>
+
+  <section class="hero" id="hero">
+    <div class="hero-pic" id="heroPic"><img id="heroImg" alt=""><span class="live-pill" id="heroPill">En vivo</span></div>
+    <div class="hero-text">
+      <p class="hero-channel" id="heroChannel"></p>
+      <h2 class="hero-title" id="heroTitle">Buscando transmisiones…</h2>
+      <p class="hero-hint" id="heroHint"></p>
+    </div>
+  </section>
+
+  <section class="shelf">
+    <h3 class="shelf-title" id="shelfTitle">Canales</h3>
+    <div class="row-window"><div class="row" id="row"></div></div>
+  </section>
+
+  <p class="toast" id="toast"></p>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
