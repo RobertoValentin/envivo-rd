@@ -1,10 +1,10 @@
 {
   "name": "envivo-rd",
-  "version": "1.0.0",
-  "description": "En vivo RD: canales dominicanos que transmiten en vivo en YouTube, el que está en vivo en grande.",
-  "packageType": "mods",
+  "version": "1.1.0",
+  "description": "En vivo RD: canales dominicanos en vivo en YouTube; el que está en vivo sale en grande.",
+  "packageType": "app",
   "appName": "En vivo RD",
-  "websiteURL": "https://canales-rd.monitor-portafolio.workers.dev/tv/",
-  "main": "main.js",
+  "appPath": "app/index.html",
+  "serviceFile": "service.js",
   "keys": ["MediaPlayPause", "MediaPlay", "MediaPause", "MediaStop"]
 }
