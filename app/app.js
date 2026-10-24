@@ -114,10 +114,26 @@
     } catch (e) { launchOne(ids, control, k + 1, onFail); }
   }
 
+  // DIAL, the protocol phones use to "cast to TV": the TV's own YouTube app opens that exact video.
+  // Answers 201 when it took it. The first time, the TV may ask to allow the connection.
+  function dial(videoId, onOk, onFail) {
+    var x = new XMLHttpRequest();
+    x.open('POST', 'http://127.0.0.1:8080/ws/apps/YouTube', true);
+    x.setRequestHeader('Content-Type', 'text/plain; charset=utf-8');
+    x.timeout = 40000;
+    x.onload = function () { if (x.status === 201 || x.status === 200) onOk(); else onFail(); };
+    x.onerror = x.ontimeout = onFail;
+    x.send('v=' + videoId);
+  }
+
   function openVideo(name, videoId) {
+    toast('Abriendo ' + name + '…');
+    dial(videoId, function () {}, function () { openVideoApp(name, videoId); });
+  }
+
+  function openVideoApp(name, videoId) {
     var url = 'https://www.youtube.com/watch?v=' + videoId;
     var fail = function () { toast('No pude abrir YouTube. Abre la app de YouTube y busca ' + name + '.'); };
-    toast('Abriendo ' + name + '…');
     if (window.tizen && window.tizen.application) {
       var payload = [new window.tizen.ApplicationControlData('PAYLOAD', ['#play=' + videoId])];
       var ctl = new window.tizen.ApplicationControl('http://tizen.org/appcontrol/operation/view', url, null, null, payload);
