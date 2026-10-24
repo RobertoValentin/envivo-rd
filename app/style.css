@@ -4,51 +4,48 @@
 /* Palette: night #0D1C30, card #172C45, flag red #D7262E, text #F4F7FB, muted #A9B8CC, focus #FFE9B8 */
 html, body { margin: 0; padding: 0; width: 1920px; height: 1080px; overflow: hidden; background: #0D1C30; }
 body { font-family: 'Atkinson', 'Samsung Sans', Arial, sans-serif; color: #F4F7FB; }
-#stage { position: relative; width: 1920px; height: 1080px; padding: 56px 96px 0; box-sizing: border-box; }
+#stage { position: relative; width: 1920px; height: 1080px; padding: 56px 110px 0; box-sizing: border-box; }
 
-.top { height: 72px; }
-.brand { margin: 0; float: left; font-size: 40px; font-weight: 700; line-height: 72px; letter-spacing: 0.5px; }
-.clock { margin: 0; float: right; font-size: 40px; line-height: 72px; color: #A9B8CC; }
-.checked { margin: 0 40px 0 0; float: right; font-size: 28px; line-height: 72px; color: #A9B8CC; }
+.top { height: 80px; margin-bottom: 34px; }
+.brand { margin: 0; float: left; font-size: 46px; font-weight: 700; line-height: 80px; }
+.clock { margin: 0; float: right; font-size: 44px; line-height: 80px; color: #A9B8CC; }
+.checked { margin: 0 44px 0 0; float: right; font-size: 28px; line-height: 80px; color: #A9B8CC; }
 
-.hero { position: relative; height: 520px; margin-top: 32px; border-radius: 28px; outline: 0; }
-.hero-pic { position: absolute; left: 0; top: 0; width: 924px; height: 520px; border-radius: 28px; overflow: hidden; background: #172C45; }
-.hero-pic img { width: 100%; height: 100%; display: block; }
-.live-pill { position: absolute; left: 28px; top: 28px; padding: 10px 22px 10px 46px; border-radius: 40px;
-  background: #D7262E; font-size: 34px; font-weight: 700; }
-.live-pill:before { content: ''; position: absolute; left: 20px; top: 50%; width: 16px; height: 16px; margin-top: -8px;
-  border-radius: 50%; background: #FFFFFF; }
-.hero-text { position: absolute; left: 984px; top: 24px; right: 0; }
-.hero-channel { margin: 0 0 16px; font-size: 44px; font-weight: 700; color: #FFE9B8; }
-.hero-title { margin: 0; font-size: 56px; line-height: 1.18; font-weight: 700; max-height: 330px; overflow: hidden; }
-.hero-hint { margin: 32px 0 0; font-size: 36px; color: #A9B8CC; }
-.hero.off .hero-pic { background: #172C45; }
-.hero.off .hero-pic img { width: 280px; height: 280px; margin: 120px auto 0; border-radius: 50%; object-fit: cover; }
-.hero.off .live-pill { display: none; }
-.hero.focus .hero-pic { box-shadow: 0 0 0 8px #FFE9B8; }
+/* 5 columns x 3 rows: 13 channels + "Canales 24 horas" */
+.grid { position: relative; width: 1700px; }
+/* One focus ring that glides between tiles (strong ease-in-out for on-screen movement). */
+.ring { position: absolute; left: -18px; top: -18px; width: 340px; height: 314px; box-sizing: border-box;
+  border: 7px solid #FFE9B8; border-radius: 32px; pointer-events: none; z-index: 2;
+  -webkit-transition: -webkit-transform 180ms cubic-bezier(0.77, 0, 0.175, 1), opacity 180ms cubic-bezier(0.23, 1, 0.32, 1);
+  transition: transform 180ms cubic-bezier(0.77, 0, 0.175, 1), opacity 180ms cubic-bezier(0.23, 1, 0.32, 1); }
+.tile { position: relative; float: left; width: 304px; height: 278px; margin: 0 45px 36px 0; border-radius: 26px;
+  background: #172C45; text-align: center;
+  -webkit-transition: -webkit-transform 180ms cubic-bezier(0.23, 1, 0.32, 1); transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1); }
+.tile.c5 { margin-right: 0; }
+.tile .logo { display: block; width: 156px; height: 156px; margin: 30px auto 16px; border-radius: 50%; background: #F4F7FB; }
+.tile .name { margin: 0 14px; font-size: 32px; font-weight: 700; line-height: 1.15; height: 37px; overflow: hidden; white-space: nowrap; }
+.tile .live { position: absolute; left: 50%; top: 14px; width: 132px; margin-left: -66px; padding: 4px 0; border-radius: 22px;
+  background: #D7262E; font-size: 24px; font-weight: 700; display: none; }
+.tile.is-live .live { display: block; }
+.tile.is-live { background: #26213A; }
+.tile.focus { -webkit-transform: scale(1.04); transform: scale(1.04); }
+/* First render only: tiles arrive one after another (stagger set inline, 35ms each). */
+.tile.enter { opacity: 0; -webkit-animation: tileIn 300ms cubic-bezier(0.23, 1, 0.32, 1) forwards; animation: tileIn 300ms cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+@-webkit-keyframes tileIn { from { opacity: 0; -webkit-transform: translateY(8px); } to { opacity: 1; -webkit-transform: translateY(0); } }
+@keyframes tileIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.tile.more { background: #1F3A5C; }
+.tile.more .glyph { display: block; width: 156px; height: 156px; margin: 30px auto 16px; border-radius: 50%;
+  background: #0D1C30; font-size: 74px; line-height: 156px; font-weight: 700; color: #FFE9B8; }
 
-.shelf { margin-top: 36px; }
-.shelf-title { margin: 0 0 20px; font-size: 38px; font-weight: 700; color: #A9B8CC; }
-.row-window { position: relative; height: 370px; margin: 0 -96px; padding: 0 96px; overflow: hidden; }
-.row { position: absolute; left: 96px; top: 12px; white-space: nowrap; transition: transform 0.25s ease-out; }
-.tile { display: inline-block; vertical-align: top; width: 412px; height: 330px; margin-right: 28px; border-radius: 22px;
-  background: #172C45; white-space: normal; overflow: hidden; transition: transform 0.15s ease-out; }
-.tile .pic { position: relative; width: 412px; height: 232px; background: #0D1C30; }
-.tile .pic img { display: block; width: 412px; height: 232px; object-fit: cover; }
-.mini-live { position: absolute; left: 14px; top: 14px; padding: 6px 14px; border-radius: 24px; background: #D7262E; font-size: 24px; font-weight: 700; }
-.tile .name { margin: 12px 18px 0; font-size: 30px; font-weight: 700; line-height: 40px; height: 40px; overflow: hidden; white-space: nowrap; }
-.tile .avatar { width: 40px; height: 40px; border-radius: 50%; vertical-align: top; margin-right: 12px; }
-.tile .state { margin: 2px 18px 0; font-size: 25px; color: #A9B8CC; line-height: 32px; height: 32px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.tile.is-live .state { color: #F4F7FB; }
-.tile.focus { transform: scale(1.06); box-shadow: 0 0 0 7px #FFE9B8; }
-.tile.more { background: #1F3A5C; text-align: center; }
-.tile.more .glyph { display: block; width: 150px; height: 150px; margin: 40px auto 18px; border-radius: 50%;
-  background: #0D1C30; font-size: 70px; line-height: 150px; font-weight: 700; color: #FFE9B8; }
-.tile.more .name, .tile.more .state { text-align: center; }
-.hero.recorded .live-pill { display: none; }
-
-.toast { position: absolute; left: 50%; bottom: 40px; width: 1200px; margin: 0 0 0 -600px; padding: 22px 32px; box-sizing: border-box;
+.toast { position: absolute; left: 50%; bottom: 34px; width: 1200px; margin: 0 0 0 -600px; padding: 22px 32px; box-sizing: border-box;
   border-radius: 20px; background: #F4F7FB; color: #0D1C30; font-size: 34px; text-align: center; opacity: 0; transition: opacity 0.2s; }
 .toast.show { opacity: 1; }
 
-@media (prefers-reduced-motion: reduce) { .row, .tile, .toast { transition: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .ring { -webkit-transition: opacity 180ms ease; transition: opacity 180ms ease; }
+  .tile { -webkit-transition: none; transition: none; }
+  .tile.focus { -webkit-transform: none; transform: none; }
+  .tile.enter { -webkit-animation: tileFade 200ms ease forwards; animation: tileFade 200ms ease forwards; }
+  @-webkit-keyframes tileFade { to { opacity: 1; } }
+  @keyframes tileFade { to { opacity: 1; } }
+}
