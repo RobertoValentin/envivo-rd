@@ -45,6 +45,16 @@
       var data;
       try { data = JSON.parse(body); } catch (e) { return reply(400, { ok: false, error: 'Bad JSON' }); }
       if (typeof tizen === 'undefined') return reply(501, { ok: false, error: 'No tizen API in the service' });
+      if (req.url === '/tizentube') {
+        if (!VIDEO_ID.test(data.videoId || '')) return reply(400, { ok: false, error: 'Bad video id' });
+        try {
+          // TizenTube appends JSON {"args": "..."} from its app control data to youtube.com/tv.
+          var payload = [new tizen.ApplicationControlData('PAYLOAD', [JSON.stringify({ args: 'v=' + data.videoId })])];
+          var ctl = new tizen.ApplicationControl('http://tizen.org/appcontrol/operation/default', null, null, null, payload);
+          return tizen.application.launchAppControl(ctl, 'xvvl3S1TT1.TizenTubeStandalone',
+            function () { reply(200, { ok: true }); }, function (e) { reply(500, { ok: false, error: String(e && e.message) }); });
+        } catch (e) { return reply(500, { ok: false, error: String(e && e.message) }); }
+      }
       if (req.url === '/youtube') {
         if (!VIDEO_ID.test(data.videoId || '')) return reply(400, { ok: false, error: 'Bad video id' });
         return openVideo(data.videoId, function (app) { reply(200, { ok: true, app: app }); },
