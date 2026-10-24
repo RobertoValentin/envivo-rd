@@ -17,6 +17,7 @@ Funciona en Tizen 4 (TVs de 2018) y en los más nuevos.
 ## Cómo funciona
 
 - `app/`: la pantalla de la TV (HTML, CSS y JavaScript ES5, porque los TVs de 2017-2018 traen un Chromium antiguo).
+- `service.js`: servicio que TizenBrew corre junto a la pantalla; es el que abre la app de YouTube (la página dentro de TizenBrew no puede abrir apps por sí misma).
 - `worker/`: un Cloudflare Worker que revisa cada canal en YouTube (si está en vivo y cuál fue su última transmisión) y responde en `/yt/live.json`. Guarda la respuesta 1 minuto.
 - La app revisa de nuevo cada vez que se abre, al volver a ella y cada 3 minutos.
 
