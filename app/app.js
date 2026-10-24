@@ -160,9 +160,28 @@
     } catch (e) { launchOne(ids, control, k + 1, onFail); }
   }
 
+  // Inside TizenBrew the page has no `tizen` object: the module's service (service.js) opens apps.
+  var SERVICE = 'http://127.0.0.1:8091';
+  function askService(path, body, onFail) {
+    var x = new XMLHttpRequest();
+    x.open('POST', SERVICE + path, true);
+    x.setRequestHeader('Content-Type', 'application/json');
+    x.timeout = 15000;
+    x.onload = function () { if (x.status !== 200) onFail(); };
+    x.onerror = x.ontimeout = onFail;
+    x.send(JSON.stringify(body));
+  }
+
   function openVideo(name, videoId) {
     var url = 'https://www.youtube.com/watch?v=' + videoId;
-    if (!window.tizen || !window.tizen.application) { window.location.href = url; return; }
+    var fail = function () { toast('No pude abrir YouTube. Abre la app de YouTube y busca ' + name + '.'); };
+    if (!window.tizen || !window.tizen.application) {
+      if (/^http:\/\/127\.0\.0\.1:8081\//.test(window.location.href)) {
+        toast('Abriendo ' + name + ' en YouTube…');
+        askService('/youtube', { videoId: videoId }, fail);
+      } else { window.location.href = url; }
+      return;
+    }
     toast('Abriendo ' + name + ' en YouTube…');
     var payload = [new window.tizen.ApplicationControlData('PAYLOAD', ['#play=' + videoId])];
     var ctl = new window.tizen.ApplicationControl('http://tizen.org/appcontrol/operation/view', url, null, null, payload);
@@ -172,7 +191,10 @@
   }
 
   function openStremio() {
-    if (!window.tizen || !window.tizen.application) { toast('Abre Stremio desde el menú de apps.'); return; }
+    if (!window.tizen || !window.tizen.application) {
+      askService('/launch', { id: STREMIO_APPS[0] }, function () { toast('Abre Stremio desde el menú de apps.'); });
+      return;
+    }
     var k = 0;
     (function next() {
       if (k >= STREMIO_APPS.length) { toast('Abre Stremio desde el menú de apps.'); return; }
