@@ -1,6 +1,6 @@
 # En vivo RD
 
-Una pantalla para TV Samsung (Tizen) que muestra los canales dominicanos que están transmitiendo **en vivo en YouTube**. El que está en vivo sale arriba, en grande. Debajo están los demás canales en vivo y, después, lo último que transmitió cada canal. Todo se abre en YouTube con el botón OK.
+Una pantalla para TV Samsung (Tizen) con los canales dominicanos como una cuadrícula de logos, siempre en el mismo orden. El canal que está **en vivo en YouTube** lleva la etiqueta roja «En vivo»; con OK se abre su transmisión en vivo o, si no está transmitiendo, lo último que transmitió.
 
 Está pensada para personas mayores: letra grande (Atkinson Hyperlegible), alto contraste y manejo solo con las flechas y OK del control.
 
